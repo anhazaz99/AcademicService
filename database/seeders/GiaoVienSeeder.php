@@ -47,6 +47,7 @@ class GiaoVienSeeder extends Seeder
         $giaoViens = [
             [
                 'user_id' => User::where('username', 'gv001')->first()->id,
+                'ma_gv' => 'GV001',
                 'ho_ten' => 'Nguyễn Văn An',
                 'gioi_tinh' => 'Nam',
                 'email' => 'nguyenvanan@example.com',
@@ -56,6 +57,7 @@ class GiaoVienSeeder extends Seeder
             ],
             [
                 'user_id' => User::where('username', 'gv002')->first()->id,
+                'ma_gv' => 'GV002',
                 'ho_ten' => 'Trần Thị Bình',
                 'gioi_tinh' => 'Nữ',
                 'email' => 'tranthibinh@example.com',
@@ -65,6 +67,7 @@ class GiaoVienSeeder extends Seeder
             ],
             [
                 'user_id' => User::where('username', 'gv003')->first()->id,
+                'ma_gv' => 'GV003',
                 'ho_ten' => 'Lê Văn Cường',
                 'gioi_tinh' => 'Nam',
                 'email' => 'levancuong@example.com',
@@ -76,7 +79,7 @@ class GiaoVienSeeder extends Seeder
 
         foreach ($giaoViens as $giaoVienData) {
             GiaoVien::firstOrCreate(
-                ['email' => $giaoVienData['email']],
+                ['ma_gv' => $giaoVienData['ma_gv']],
                 $giaoVienData
             );
         }

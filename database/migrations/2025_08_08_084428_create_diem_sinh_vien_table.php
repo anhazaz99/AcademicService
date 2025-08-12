@@ -15,12 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sinh_vien_id')->constrained('sinh_viens')->onDelete('cascade');
             $table->foreignId('mon_hoc_id')->constrained('mon_hocs')->onDelete('cascade');
-            $table->float('diem_so');
+            $table->float('diem_TX'); // Điểm thường xuyên
             $table->integer('lan_thi')->default(1);
-            $table->date('ngay_ghi')->nullable();
+            $table->date('ngay_thi')->nullable();
+            $table->float('diem_DK')->nullable(); // Điểm điều kiện
+            $table->float('diem_thi')->nullable(); // Điểm thi
+            $table->float('diemTB')->nullable(); // Điểm trung bình
             $table->timestamps();
         });
-
     }
 
     /**

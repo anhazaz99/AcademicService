@@ -42,6 +42,7 @@ class AuthController extends Controller
         $payload = [
             'iss' => 'AcademicService', 
             'sub' => $user->id,
+            'role' => $user->role,//them role vao payload
             'iat' => time(),
             'exp' => time() + 60 * 60, // Token có hiệu lực trong 1 giờ
         ];
@@ -50,7 +51,11 @@ class AuthController extends Controller
             'status' => 'success',
             'message' => 'Đăng nhập thành công.',
             'access_token' => $jwt,
-            'user' => $user,
+            'user' => [
+                'id' => $user->id,
+                'username' => $user->username,
+                'role' => $user->role,
+            ]
         ]);
     }
 
@@ -59,7 +64,20 @@ class AuthController extends Controller
         $payload = (array) $request->attributes->get('jwt_payload', []);
         $userId = $payload['sub'] ?? null;
         $user = $userId ? User::find($userId) : null;
-        return response()->json(['user' => $user]);
+        if(!$user){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Người dùng không tồn tại',
+            ],404);
+        }
+        return response()->json([
+            'status' => 'success',
+            'user' => [
+                'id' => $user->id,
+                'username' => $user->username,
+                'role' => $user->role,
+            ]
+        ]);
     }
 }
 

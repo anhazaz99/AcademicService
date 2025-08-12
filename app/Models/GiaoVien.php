@@ -8,6 +8,7 @@ class GiaoVien extends Model
 {
     protected $fillable = [
         'user_id', 
+        'ma_gv',
         'ho_ten', 
         'gioi_tinh', 
         'email', 
