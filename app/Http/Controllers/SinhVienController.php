@@ -82,6 +82,15 @@ class SinhVienController extends Controller
     }
 
     // Sửa sinh viên
-
+    public function UpdateSinhVien(SinhVienRequest $request , $id){
+        $sinhvien = SinhVien::find($id);
+        if(!$sinhvien){
+            return response()->json([
+                'status' => true,
+                'massage' => 'Cập Nhật Sinh Viên Thành Công',
+                'error' => $e->getMassage()
+            ]);
+        }
+    }
     // Xóa sinh viên
 }
