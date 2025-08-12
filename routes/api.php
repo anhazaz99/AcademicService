@@ -16,8 +16,10 @@ use Illuminate\Support\Facades\Route;
 
 
 //SinhVien
+Route::middleware([JwtAuthenticate::class])->group(function() {
     Route::post('/addsinhvien',[SinhVienController::class, 'AddSinhVien']);
     Route::get('/danhsachsinhvien',[SinhVienController::class, 'AllSinhVien']);
     Route::post('/capnhatsinhvien',[SinhVienController::class, 'UpdateSinhVien']);
     Route::post('/xoasinhvien', [SinhVienController::class, 'DeleteSinhVien']);
     Route::get('/thongtinsinhviendangnhap', [SinhVienController::class , 'CurrentSinhVien']);
+});
