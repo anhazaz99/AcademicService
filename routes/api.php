@@ -19,7 +19,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware([JwtAuthenticate::class])->group(function() {
     Route::post('/addsinhvien',[SinhVienController::class, 'AddSinhVien']);
     Route::get('/danhsachsinhvien',[SinhVienController::class, 'AllSinhVien']);
-    Route::post('/capnhatsinhvien',[SinhVienController::class, 'UpdateSinhVien']);
-    Route::post('/xoasinhvien', [SinhVienController::class, 'DeleteSinhVien']);
-    Route::get('/thongtinsinhviendangnhap', [SinhVienController::class , 'CurrentSinhVien']);
+    Route::post('/capnhatsinhvien/{id}',[SinhVienController::class, 'UpdateSinhVien']);
+    Route::delete('/xoasinhvien/{id}', [SinhVienController::class, 'DeleteSinhVien']);
+    Route::get('/thongtinsinhviendangnhap/{user_id}', [SinhVienController::class , 'getSinhVienByUserId']);
 });
+
