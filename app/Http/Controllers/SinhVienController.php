@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SinhVienRequest;
+use App\Http\Requests\SinhVienUpdateRequest;
 use App\Models\SinhVien;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -21,23 +23,21 @@ class SinhVienController extends Controller
             'data'=>$sinhviens
         ]);
     }
-    
-    // Thông Tin Sinh Viên Đang Đăng Nhập
-    public function CurrentSinhVien()
+    // Lấy Thông Tin Sinh Viên
+    public function  getSinhVienByUserId($user_id)
     {
-        $user = Auth::user();
-        $sinhvien = SinhVien::where('user_id', $user->id)->get();
+        $sinhvien = SinhVien::with('user')->where('user_id', $user_id)->first();
 
-        if(!$sinhvien){
+        if (!$sinhvien) {
             return response()->json([
-                'status'=>false,
-                'message'=> 'Không Tìm Thấy Sinh Viên'
-            ]);
+                'status' => false,
+                'message' => 'Không Tìm Thấy Sinh Viên'
+            ], 404);
         }
-        
+
         return response()->json([
-            'status'=>true,
-            'data'=>$sinhvien
+            'status' => true,
+            'data' => $sinhvien
         ]);
     }
 
@@ -82,6 +82,69 @@ class SinhVienController extends Controller
     }
 
     // Sửa sinh viên
+    public function UpdateSinhVien(SinhVienUpdateRequest $request, $id)
+    {
+        $sinhvien = SinhVien::find($id);
 
+        if (!$sinhvien) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Không Tìm Thấy Sinh Viên'
+            ], 404);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $validated = $request->validated();
+
+            // Loại bỏ các trường không liên quan đến bảng sinh_viens
+            unset($validated['password'], $validated['password_confirmation']);
+
+            $sinhvien->update($validated);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Cập nhật sinh viên thành công',
+                'data' => $sinhvien
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => 'Cập nhật thất bại',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
     // Xóa sinh viên
+    public function DeleteSinhVien($id){
+        $sinhvien = SinhVien::find($id);
+        $user_id = $sinhvien->user_id;
+        $user = User::where('id', $user_id)->first();
+        try{
+            if(!$sinhvien){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Không Tìm Thấy Sinh Viên'
+                ]);
+            }
+
+            $sinhvien->delete($id);
+            $user->delete($user_id);
+            return response()->json([
+                'status' => true,
+                'message' => 'Xóa Thành Công Sinh Viên',
+            ],200);
+        }
+        catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'message' => 'Xóa Sinh Viên Thất Bại',
+                'error' => $e->getMessage(),
+            ],500);
+        }
+    }
 }

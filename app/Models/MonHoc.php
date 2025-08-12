@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MonHoc extends Model
 {
-    protected $fillable = ['ten_mon', 'so_tin_chi'];
+    protected $fillable = ['ten_mon', 'so_tin_chi','khoa_id' , 'giao_vien_id'];
 
     public function lichHocs()
     {
