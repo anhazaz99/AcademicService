@@ -23,14 +23,6 @@ class GiaoVienController extends Controller
     public function index(): JsonResponse
     {
         try {
-            // Chỉ admin mới được xem tất cả giáo viên
-            if (!AuthHelper::isAdmin()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Bạn không có quyền xem danh sách giáo viên'
-                ], 403);
-            }
-
             $giaoViens = GiaoVien::with(['user', 'khoa'])->get();
             
             return response()->json([
@@ -54,14 +46,6 @@ class GiaoVienController extends Controller
     public function store(GiaovienRequest $request): JsonResponse
     {
         try {
-            // Chỉ admin mới được thêm giáo viên
-            if (!AuthHelper::isAdmin()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Bạn không có quyền thêm giáo viên'
-                ], 403);
-            }
-
             DB::beginTransaction();
             
             $validated = $request->validated();
@@ -151,29 +135,6 @@ class GiaoVienController extends Controller
                 ], 404);
             }
 
-            $currentUser = AuthHelper::getCurrentUser();
-            
-            // Kiểm tra quyền xem thông tin giáo viên
-            if (!AuthHelper::isAdmin()) {
-                // Giáo viên chỉ được xem thông tin của mình
-                if ($currentUser->role === 'giaovien') {
-                    $currentGiaoVien = GiaoVien::where('user_id', $currentUser->id)->first();
-                    if (!$currentGiaoVien || $currentGiaoVien->id != $id) {
-                        return response()->json([
-                            'status' => false,
-                            'message' => 'Bạn chỉ được xem thông tin của mình'
-                        ], 403);
-                    }
-                }
-                // Sinh viên không được xem thông tin giáo viên
-                else {
-                    return response()->json([
-                        'status' => false,
-                        'message' => 'Bạn không có quyền xem thông tin giáo viên'
-                    ], 403);
-                }
-            }
-
             return response()->json([
                 'status' => true,
                 'message' => 'Lấy thông tin giáo viên thành công',
@@ -210,29 +171,6 @@ class GiaoVienController extends Controller
                     'status' => false,
                     'message' => 'Không tìm thấy giáo viên'
                 ], 404);
-            }
-
-            $currentUser = AuthHelper::getCurrentUser();
-            
-            // Kiểm tra quyền cập nhật
-            if (!AuthHelper::isAdmin()) {
-                // Giáo viên chỉ được cập nhật thông tin của mình
-                if ($currentUser->role === 'giaovien') {
-                    $currentGiaoVien = GiaoVien::where('user_id', $currentUser->id)->first();
-                    if (!$currentGiaoVien || $currentGiaoVien->id != $id) {
-                        return response()->json([
-                            'status' => false,
-                            'message' => 'Bạn chỉ được cập nhật thông tin của mình'
-                        ], 403);
-                    }
-                }
-                // Sinh viên không được cập nhật thông tin giáo viên
-                else {
-                    return response()->json([
-                        'status' => false,
-                        'message' => 'Bạn không có quyền cập nhật thông tin giáo viên'
-                    ], 403);
-                }
             }
 
             DB::beginTransaction();
@@ -297,14 +235,6 @@ class GiaoVienController extends Controller
     public function destroy(string $id): JsonResponse
     {
         try {
-            // Chỉ admin mới được xóa giáo viên
-            if (!AuthHelper::isAdmin()) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Bạn không có quyền xóa giáo viên'
-                ], 403);
-            }
-
             DB::beginTransaction();
             
             // Kiểm tra ID có hợp lệ không
@@ -372,13 +302,6 @@ class GiaoVienController extends Controller
         try {
             $currentUser = AuthHelper::getCurrentUser();
             
-            if (!$currentUser || $currentUser->role !== 'giaovien') {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Bạn không phải là giáo viên'
-                ], 403);
-            }
-
             $giaoVien = GiaoVien::where('user_id', $currentUser->id)
                 ->with(['user', 'khoa'])
                 ->first();
