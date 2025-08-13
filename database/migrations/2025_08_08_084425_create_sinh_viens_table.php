@@ -14,13 +14,16 @@ return new class extends Migration
         Schema::create('sinh_viens', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('ho_ten');
+            $table->string('ho_ten')->nullable();
             $table->date('ngay_sinh')->nullable();
             $table->enum('gioi_tinh', ['Nam', 'Nu'])->nullable();
             $table->foreignId('lop_id')->constrained('lops')->onDelete('cascade');
+            $table->string('ma_sv')->nullable();
+            $table->string('dia_chi')->nullable();
+            $table->string('sdt', 50)->nullable();
+            $table->string('email', 50)->nullable();
             $table->timestamps();
         });
-
     }
 
     /**

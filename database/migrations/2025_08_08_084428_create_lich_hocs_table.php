@@ -22,7 +22,6 @@ return new class extends Migration
             $table->foreignId('giao_vien_id')->constrained('giao_viens')->onDelete('cascade');
             $table->timestamps();
         });
-
     }
 
     /**

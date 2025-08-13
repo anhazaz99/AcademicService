@@ -15,12 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sinh_vien_id')->constrained('sinh_viens')->onDelete('cascade');
             $table->foreignId('mon_hoc_id')->constrained('mon_hocs')->onDelete('cascade');
-            $table->float('diem_so');
+            $table->double('diem_TX');
             $table->integer('lan_thi')->default(1);
-            $table->date('ngay_ghi')->nullable();
+            $table->date('ngay_thi')->nullable();
+            $table->double('diem_DK')->nullable();
+            $table->double('diem_thi')->nullable();
+            $table->double('diemTB')->nullable();
             $table->timestamps();
         });
-
     }
 
     /**

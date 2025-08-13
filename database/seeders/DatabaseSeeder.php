@@ -15,6 +15,13 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        // Chạy các seeder theo thứ tự để đảm bảo dữ liệu phụ thuộc
+        $this->call([
+            UserSeeder::class,
+            GiaoVienSeeder::class,
+            MonHocSeeder::class,
+        ]);
+
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',

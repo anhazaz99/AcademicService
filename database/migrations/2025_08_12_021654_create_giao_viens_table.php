@@ -15,11 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('ho_ten');
-            $table->enum('gioi_tinh', ['Nam', 'Nữ'])->nullable();
-            $table->string('email')->unique();
-            $table->text('dia_chi')->nullable();
-            $table->string('sdt', 20)->nullable();
-            $table->string('hoc_vi')->nullable();
+            $table->string('gioi_tinh')->nullable();
+            $table->string('email')->nullable();
+            $table->string('dia_chi')->nullable();
+            $table->string('sdt')->nullable();
             $table->foreignId('khoa_id')->constrained('khoas')->onDelete('cascade');
             $table->timestamps();
         });

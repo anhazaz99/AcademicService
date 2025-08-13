@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SinhVienController;
+use App\Http\Controllers\MonHocController;
 use App\Http\Middleware\JwtAuthenticate;
 use App\Models\SinhVien;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,20 @@ Route::middleware([JwtAuthenticate::class])->group(function() {
 // GiaoVien CRUD routes
 Route::middleware([JwtAuthenticate::class])->group(function () {
     Route::apiResource('giaoviens', GiaoVienController::class);
+});
+
+// MonHoc CRUD routes
+Route::middleware([JwtAuthenticate::class])->group(function () {
+    Route::get('/monhocs', [MonHocController::class, 'index']);
+    Route::post('/monhocs', [MonHocController::class, 'store']);
+    Route::get('/monhocs/{monhoc}', [MonHocController::class, 'show']);
+    Route::put('/monhocs/{monhoc}', [MonHocController::class, 'update']);
+    Route::delete('/monhocs/{monhoc}', [MonHocController::class, 'destroy']);
+    
+    // Các routes bổ sung cho môn học
+    Route::get('/monhocs-khoa/{khoaId}', [MonHocController::class, 'getByKhoa']);
+    Route::get('/monhocs-giaovien/{giaoVienId}', [MonHocController::class, 'getByGiaoVien']);
+    Route::get('/monhocs-search', [MonHocController::class, 'search']);
 });
     
 
